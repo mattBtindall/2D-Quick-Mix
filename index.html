@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+    <head>
+        <title> 2D Quick Mix </title>
+        <link rel="shortcut icon" type="image/x-icon" href="img/music-icon.png"/>
+                <!-- External Libaries -->
+        <!-- jQuery Libary -->
+        <script src="ExternalJs/jquery.js"></script>
+        <!-- Tone.js Libary -->
+        <script src="ExternalJs/Tone.js"></script>
+        <!-- p5.js Libary -->
+        <script src="ExternalJs/p5.js"></script>
+        <!-- Add icon library -->
+        <link href="css/fontawesome-all.css" rel="stylesheet">
+
+        <!-- CSS Style Sheet -->
+        <link rel="stylesheet" href="CSS/style.css">
+    </head>
+    <body> 
+        <div id="landing-page">
+            <button id="load-btn" class="transportBtn" onclick="fadeOut();">Enter Quick Mix</button>
+        </div>
+                <!-- Internal Scripts -->
+        <!-- Track object implemented here -->
+        <script src="InternalJs/Track.js"></script>
+        <!-- Global varaibles defined here -->
+        <script src="InternalJs/variables.js"></script>
+        <!-- Ui implemented here -->
+        <script src="InternalJs/ui.js"></script>
+        <!-- Functions are implemented here --> 
+        <script src="InternalJs/audio.js"></script> 
+        <!-- MIDI -->
+        <script src="InternalJs/MIDI.js"></script>
+        <!-- Keyboard events checked here -->
+        <script src="InternalJs/keyboard.js"></script>
+        <!-- User input is handled here -->
+        <script src="InternalJs/handleInput.js"></script>
+        <!-- Main program: Functions are called from here -->
+        <script src="InternalJs/main.js"></script>
+    </body>
+</html>

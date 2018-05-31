@@ -22,12 +22,14 @@ function mouseDragged()
 }
 function mousePressed()
 {
+    mPressed = true;
     for (let i = 0; i < tracks.length; i++) {
         if (mouseButton === LEFT && !event.shiftKey) {
             if (Master.mode === 'mix') {
                 tracks[i].isClickedMix();
             } else if (Master.mode === 'eq') {
                 tracks[i].clickedEq( false);
+                clickEqTest();
             }
         }
         else if (mouseButton === RIGHT && !event.shiftKey) {
@@ -67,6 +69,7 @@ function mouseReleased()
         // }
         tracks[i].shiftDragged = false;
     }
+    mPressed = false;
     //setTimeout(() => {if (dblClickEq) dblClickEq=false}, 100)
     eqCounter = 0;
     //firstTime = true;
@@ -83,6 +86,26 @@ function isShiftClicked( i)
     if (shiftDragged === false) {
         tracks[i].isShiftClickedMix();
     }
+}
+
+function clickEqTest()
+{
+    stillClicked = true;
+    let intervalTest = setInterval(() => {
+        if (!mPressed) {
+            this.clicked = true;
+            clearInterval(intervalTest);
+            console.log('Mouse released');
+            stillClicked = false;
+        }
+    }, 50);
+
+    setTimeout(() => {
+        if (stillClicked) {
+            console.log('Mix mode in the eq');
+        }
+        clearInterval( intervalTest);
+    }, 1000);
 }
 
 // function keyPressed()

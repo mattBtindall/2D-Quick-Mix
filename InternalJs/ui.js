@@ -100,6 +100,7 @@ function selectMode()
         } else if (Master.mode === 'eq') {
             frameRate(15);
             eq();
+            tracks.forEach((obj) => obj.dynamicModeFunc());
         }  
     } 
     else if (Master.mode === 'input') {

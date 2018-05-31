@@ -24,6 +24,7 @@ function Track( x, y, r, label, colour, url)
     this.collidedWith = [];
     this.eqMovedFlag = false;
     this.dragDirection;
+    this.dynamicMode = false;
 
     // p5 Event listeners
     this.clicked = false;
@@ -86,16 +87,10 @@ Track.prototype.moveMix = function()
                 this.partner.showMix();
             }
         }
-        this.setDirection();
         this.setVolume();
         this.setPan();
-        //if (this.y != undefined) {
-            //this.prevY = this.y;
-        //}
         this.prevY = this.y;
         this.prevX = this.x;
-        // prevMousePosMixX = closestValue( Master.centerPointsX, mouseX);
-        // prevMousePosMixY = closestValue( Master.centerPointsY, mouseY);
     }
     else if (this.shiftDragged) {
         this.joinTrack();
@@ -240,14 +235,14 @@ Track.prototype.isRightClickedMix = function()
         this.rightClicked = true;
     } 
 }
-Track.prototype.isDblClickedEq = function()
-{
-    if (hitTest( this.eqX + (this.rectW/2), (this.y+(Master.sclH/2)), (this.rectW/4))) {
-        console.log('DblClickEq', this.label);
-        this.dblClicked = true;
-        this.updateAudio();
-    }
-}
+// Track.prototype.isDblClickedEq = function()
+// {
+//     if (hitTest( this.eqX + (this.rectW/2), (this.y+(Master.sclH/2)), (this.rectW/4))) {
+//         console.log('DblClickEq', this.label);
+//         this.dblClicked = true;
+//         this.updateAudio();
+//     }
+// }
 Track.prototype.isRightClickedEq = function()
 {
     if (hitTest( this.eqX + (this.rectW/2), this.y, (this.rectW/2))) {
@@ -432,19 +427,19 @@ Track.prototype.nodeStyle = function()
     }
 }
 
-Track.prototype.setDirection = function()
-{
-    if (this.x > this.prevX) {
-        this.direction = 'right';
-    } else if (this.x < this.prevX) {
-        this.direction = 'left';
-    }
-    if (this.y > this.prevY) {
-        this.direction = 'downwards';
-    } else if (this.y < this.prevY) {
-        this.direction = 'upwards';
-    }
-}
+// Track.prototype.setDirection = function()
+// {
+//     if (this.x > this.prevX) {
+//         this.direction = 'right';
+//     } else if (this.x < this.prevX) {
+//         this.direction = 'left';
+//     }
+//     if (this.y > this.prevY) {
+//         this.direction = 'downwards';
+//     } else if (this.y < this.prevY) {
+//         this.direction = 'upwards';
+//     }
+// }
 // Track.prototype.collide = function()
 // {
 //     for (let i = 0; i < tracks.length; i++) {
@@ -510,15 +505,27 @@ Track.prototype.drawEq = function()
     }
 }
 
-Track.prototype.hitEqRect = function( dev)
+Track.prototype.isHitEqRect = function( dev)
 {
-    for (let i = 0; i < Master.rectPointsY.length; i++) {
-        if (hitTest( this.eqX + (this.rectW/dev), Master.centerPointsY[i], (this.rectW/dev))) {
-            currentTrack = this;
-            this.eqFlag = true;
-            getState( i);
+    if (hitTest( this.eqX + (this.rectW/dev), this.y, (this.rectW/dev))) {
+        this.moveEqTest();
+    } else {
+        for (let i = 0; i < Master.rectPointsY.length; i++) {
+            if (hitTest( this.eqX + (this.rectW/dev), Master.centerPointsY[i], (this.rectW/dev))) {
+                // currentTrack = this;
+                // this.eqFlag = true;
+                // getState( i);
+                this.hitEqRect( i);
+            }
         }
     }
+}
+
+Track.prototype.hitEqRect = function( i)
+{
+    currentTrack = this;
+    this.eqFlag = true;
+    getState( i);
 }
 
 Track.prototype.clickedEq = function()
@@ -529,7 +536,7 @@ Track.prototype.clickedEq = function()
     //     console.log('name hit');
     //     this.hitEqRect( 4);
     // } else {
-        this.hitEqRect( 2);
+    this.isHitEqRect( 2);
     //}
     if (this.eqFlag) {
         this.toggleEq( segId);  
@@ -540,6 +547,36 @@ Track.prototype.toggleEq = function( segId)
     this.onOffEq( segId);
     if (this.partner != null) {
         this.partner.onOffEq( segId);
+    }
+}
+
+Track.prototype.moveEqTest = function()
+{
+    stillClicked = true;
+    let intervalTest = setInterval(() => {
+        if (!mPressed) {
+            this.clicked = true;
+            stillClicked = false;
+            clearInterval(intervalTest);
+            console.log('toggle that box');
+            this.hitEqRect( Master.centerPointsY.indexOf(this.y));
+        }
+    }, 50);
+
+    setTimeout(() => {
+        if (stillClicked) {
+            this.dynamicMode = true;
+        }
+        clearInterval( intervalTest);
+    }, 1000);
+}
+
+Track.prototype.dynamicModeFunc = function()
+{
+    if (this.dynamicMode) {
+        console.log('move',this.label);
+        this.moveMix();
+        this.clicked = true;
     }
 }
 

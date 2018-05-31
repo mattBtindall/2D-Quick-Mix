@@ -24,6 +24,9 @@ let hitTrack;
 
 let loaded = false;
 
+let stillClicked = false;
+let mPressed = false;
+
 
 function Global( gridNoW, gridNoH)
 {

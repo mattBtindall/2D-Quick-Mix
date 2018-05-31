@@ -22,6 +22,7 @@ function mouseDragged()
 }
 function mousePressed()
 {
+    mPressed = true;
     for (let i = 0; i < tracks.length; i++) {
         if (mouseButton === LEFT && !event.shiftKey) {
             if (Master.mode === 'mix') {
@@ -61,11 +62,16 @@ function mouseReleased()
         tracks[i].dragFlag = false;
         tracks[i].rightClicked = false;
         tracks[i].collidedWith = [];
+        tracks[i].dynamicMode = false;
         // if (tracks[i].shiftDragged === true) {
         //     let partnerTemp = tracks[i].partner;
         //     partnerTemp.partner = tracks[i];
         // }
         tracks[i].shiftDragged = false;
+    }
+    if (mPressed = true) {
+        eqFirstTime = true;
+        mPressed = false;
     }
     //setTimeout(() => {if (dblClickEq) dblClickEq=false}, 100)
     eqCounter = 0;

@@ -22,7 +22,6 @@ function mouseDragged()
 }
 function mousePressed()
 {
-    mPressed = true;
     for (let i = 0; i < tracks.length; i++) {
         if (mouseButton === LEFT && !event.shiftKey) {
             if (Master.mode === 'mix') {
@@ -69,7 +68,7 @@ function mouseReleased()
         // }
         tracks[i].shiftDragged = false;
     }
-    if (mPressed = true) {
+    if (mPressed) {
         eqFirstTime = true;
         mPressed = false;
     }
@@ -82,6 +81,7 @@ function mouseReleased()
     shiftDragged = false;
     firstDrag = true;
     firstTimeClicked = true;
+    console.log('mPressed:',mPressed);
 }
 
 function isShiftClicked( i)

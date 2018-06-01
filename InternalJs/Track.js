@@ -511,7 +511,7 @@ Track.prototype.isHitEqRect = function( dev)
         this.moveEqTest();
     } else {
         for (let i = 0; i < Master.rectPointsY.length; i++) {
-            if (hitTest( this.eqX + (this.rectW/dev), Master.centerPointsY[i], (this.rectW/dev))) {
+            if (hitTest( this.eqX + (this.rectW/dev), Master.centerPointsY[i], (this.rectW/dev)) && i != Master.centerPointsY.indexOf(this.y)) {
                 // currentTrack = this;
                 // this.eqFlag = true;
                 // getState( i);
@@ -532,12 +532,7 @@ Track.prototype.clickedEq = function()
 {
     let mouseTemp = closestValue( Master.centerPointsY, mouseY);
     let segId = Master.centerPointsY.indexOf(mouseTemp);
-    //if (segId === Master.centerPointsY.indexOf(this.y)) {
-    //     console.log('name hit');
-    //     this.hitEqRect( 4);
-    // } else {
     this.isHitEqRect( 2);
-    //}
     if (this.eqFlag) {
         this.toggleEq( segId);  
     }
@@ -552,19 +547,23 @@ Track.prototype.toggleEq = function( segId)
 
 Track.prototype.moveEqTest = function()
 {
-    stillClicked = true;
+    //stillClicked = true;
+    mPressed = true;
+    console.log('called');
     let intervalTest = setInterval(() => {
         if (!mPressed) {
-            this.clicked = true;
-            stillClicked = false;
+            //this.clicked = true;
+            //stillClicked = false;
             clearInterval(intervalTest);
-            console.log('toggle that box');
+            console.log('toggle it ');
             this.hitEqRect( Master.centerPointsY.indexOf(this.y));
+            this.clickedEq();
         }
     }, 50);
 
     setTimeout(() => {
-        if (stillClicked) {
+        console.log(mPressed)
+        if (mPressed) {
             this.dynamicMode = true;
         }
         clearInterval( intervalTest);
@@ -585,6 +584,7 @@ Track.prototype.draggedEq = function()
     this.dragFlag = true;
     let mouseYTemp = closestValue( Master.centerPointsY, mouseY);
     let segId = Master.centerPointsY.indexOf(mouseYTemp);
+    mPressed = false;
 
     if (mouseYTemp != closestValue( Master.centerPointsY, prevMousePosY) && this.eqFlag) { // Only change if mouseY leaves current box
         this.toggleEq( segId);
